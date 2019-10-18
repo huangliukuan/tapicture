@@ -12,6 +12,10 @@ import MintUI from "mint-ui"
 import "mint-ui/lib/style.css"
 //3:将mint-ui注册Vue示例
 Vue.use(MintUI)
+import Vant from 'vant'
+import 'vant/lib/index.css'
+
+Vue.use(Vant);
 // 引入axios
 import axios from "axios"
 // 配置服务器基础路径
