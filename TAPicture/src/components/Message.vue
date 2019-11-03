@@ -2,6 +2,7 @@
 <div>
   <!-- 消息标题 -->
     <div class="mTitle">
+      <img class="lImg" src="../assets/image/fanhui.png" alt="">
       <span class="tText">消息</span>
       <img class="tImg" src="../assets/image/message.png" alt="">
     </div>
@@ -12,7 +13,7 @@
         <p class="ctext">赞和收藏</p>
       </div>
       <div class="mCent">
-        <img src="../assets/image/zan.jpg" alt="赞和收藏">
+        <img src="../assets/image/zan.png" alt="赞和收藏">
         <p class="ctext">新增关注</p>
       </div>
       <div class="mCent">
@@ -53,19 +54,27 @@ export default {
 /* 消息标题 */
 .mTitle{
   width:100%;
-  height:38px;
-  line-height: 38px;
+  height:50px;
+  line-height: 55px;
   position: relative;
   text-align: center;
+  border-bottom:1px solid #ddd; 
 }
 .mTitle>.tText{
-  font-size: 24px;
-  font-weight: 350;
+  color: rgb(116, 113, 113);
+  font-size: 22px;
 }
 .mTitle>.tImg{
   position: absolute;
-  top:5px;
+  height: 27px;
+  top:13px;
   right: 20px;
+}
+.mTitle>.lImg{
+  position: absolute;
+  height: 27px;
+  top:15px;
+  left: 20px;
 }
 /* 各标题 */
 .mCenter{
@@ -84,9 +93,10 @@ export default {
   text-align: center;
 }
 .mCenter>.mCent>img{
-  width:48px;
-  height: 48px;
+  width:40px;
+  height: 40px;
   border-radius: 50%;
+  margin-top: 3px;
 }
 .mCenter>.mCent>.ctext{
   margin: 0;
@@ -137,9 +147,9 @@ export default {
 }
 .mBottom>.mbTime{
   width: 20%;
-  height: 72px;
+  height: 80px;
   line-height: 72px;
-  color: #333;
+  color: rgb(53, 50, 50);
 }
 
 </style>

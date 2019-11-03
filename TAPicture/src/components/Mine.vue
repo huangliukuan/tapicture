@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="mine">
   <!-- 头部 -->
   <div class="mhead">
     <!-- 三横线 -->
@@ -10,10 +10,10 @@
     </div>  
     <!-- 昵称和碗号 -->
     <div class="hcenter">
-      <p class="mhname">乐观开朗积极向上</p>
+      <router-link :to="{path:url}" class="mhname">{{muser.uname}}</router-link>
       <p class="mhid">
-        <span>碗号:</span>
-        <span>234234342</span>
+        <span>碗号:请登录</span>
+        <span>{{muser.uid}}</span>
       </p>
     </div>
     <!-- 分享 -->
@@ -28,7 +28,8 @@
     <!-- 头像 -->
     <div class="uleft">
       <div class="uImg">
-       <img src="../assets/image/dingding.png" alt="用户头像"> 
+        <img src="../assets/image/dingding.png" alt="头像">
+       <!-- <img :src="ip+muser.avater" alt="用户头像">  -->
       </div>
     </div>
     <!-- 详细信息-->
@@ -36,16 +37,12 @@
       <!-- 关注点赞 -->
       <div class="unum">
         <div class="nleft">
-          <p>9</p>
+          <p>{{muser.att}}</p>
           <p>关注</p>
         </div>
         <div class="ncenter">
-          <p>14</p>
+          <p>{{muser.fan}}</p>
           <p>粉丝</p>
-        </div>
-        <div class="nright">
-          <p>200</p>
-          <p>点赞</p>
         </div>
       </div>
       <!-- 资料编辑 -->
@@ -56,7 +53,6 @@
         </router-link>
       </div>
     </div>
-    <p class="intro">这个人很懒,什么也没写</p>
   </div>
   <!-- 自拍内容 -->
   <div class="heppy">
@@ -83,6 +79,7 @@
         <div class="hbImg">
             <img v-for="(item,i) in 6" :key="i" src="../assets/image/1.jpg" alt="美食图片">
         </div>
+        
       </div>
       <!-- 底部 -->
       <div class="hfoot">
@@ -99,53 +96,109 @@
 export default {
   data(){
     return{
-      show:false,
-      active:"",
+      ip:"http://127.0.0.1:3000/",
+      muser:"",
+      ulist:[],
+      abc:"",
+      url:""
     }
   },
-  methods: {
-    showPopup() {
-      this.show = true;
-    }
+  created(){
+    this.axios.get("mUser")
+    .then(res=>{
+      this.muser=res.data.data[0];
+      console.log(this.muser);
+      
+      var a = res.data.code;
+      var mhid = document.querySelector(".mhid");
+      var hright = document.querySelector(".hright");
+      var muser = document.querySelector(".muser");
+      var heppy = document.querySelector(".heppy");
+      if(a==-1){
+        this.abc = "请登录";
+        this.url = "login";
+        mhid.style.display = "none";
+        hright.style.display = "none";
+        muser.style.display = "none";
+        heppy.style.display = "none";
+      }else{
+        this.abc = res.data.uname;
+        this.url = "";
+        mhid.style.display = "block";
+        hright.style.display = "block";
+        muser.style.display = "flex";
+        heppy.style.display = "block";
+        
+      }
+    })
+    .catch(err=>{
+      console.log(err);
+    })
   }
 }
 </script>
 <style scoped>
+.mhname{
+  color:#000;
+}
+.mine{
+  padding: 5px;
+  box-sizing: border-box;
+}
 /* 头部外层 */
 .mhead{
   width: 100%;
-  height:64px;
+  height:50px;
   display: flex;
+  position: relative;
   justify-content: space-around;
   align-items: center;
-  border-bottom:1px solid #ddd;
+  border-bottom:1px solid #aaa;
 }
 /* 左右两边二级div */
-.mhead>.hleft,
 .mhead>.hright{
+  position: absolute;
+  width:34px;
+  height: 34px;
+  top: 10px;
+  right: 17px;
+}
+.mhead>.hleft{
+  position: absolute;
   width:36px;
   height: 36px;
+  top: 8px;
+  left: 18px;
 }
 /* 头部左右两个图片 */
-.mhead>.hleft img,
+.mhead>.hleft img{
+  width: 30px;
+  height: 30px;
+}
 .mhead>.hright img{
-  width: 100%;
+  width: 25px;
+  height: 25px;
 }
 /* 头部昵称 */
+.mhead>.hcenter{
+  font-size:20PX;
+ text-align: center;
+}
 .mhead>.hcenter>p{
+ 
   margin:0 0 5px;
   font-size:16px;
   font-weight: bold;
 }
 /* 头部碗号 */
 .mhead>.hcenter>p:last-child{
-  color:#aaa;
-  font-size: 15px;
+  color:rgb(139, 137, 137);
+  font-size: 20px;
 }
 /* 用户信息div */
 .muser{
   width:100%;
-  height:148px;
+  height:120px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -153,7 +206,7 @@ export default {
 }
 /* 用户头像 */
 .muser>.uleft{
-  width:30%;
+  width:100px;
   height:100px;
 }
 .muser>.uleft>.uImg{
@@ -170,6 +223,7 @@ export default {
 .muser>.infor{
   width: 70%;
   height:100px;
+  text-align: center;
 }
 /* 关注点赞 */
 .muser>.infor>.unum{
@@ -178,6 +232,8 @@ export default {
   padding: 10px 0;
 }
 .muser>.infor>.unum p{
+  color: rgb(73, 60, 59);
+  font-size: 18px;
   margin: 0;
   padding: 3px;
 }
@@ -189,7 +245,7 @@ export default {
   text-decoration: none;
   border: 1px solid #aaa;
   border-radius:29px;
-  color:#333;
+  color:rgb(49, 48, 48);
   text-align: center;
 }
 /* 简介 */
@@ -208,7 +264,7 @@ export default {
 /* 美好一刻内容 */
 .htext{
   border:1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 30px;
   margin-top:10px;
 }
 /* 用户信息 */
@@ -224,7 +280,6 @@ export default {
 .htext>.htitle>.htImg{
   width:15%;
   height: 48px;
-  padding-top:10px;
   box-sizing: border-box;
 }
 .htext>.htitle>.htNT{
@@ -233,7 +288,7 @@ export default {
 }
 /* 头像 */
 .htext>.htitle>.htImg>img{
-  width: 36px;
+  width: 42px;
   border: 1px solid #aaa;
   border-radius: 50%;
 }
@@ -265,7 +320,9 @@ export default {
   flex-wrap: wrap;
 }
 .hbody>.hbImg img{
-  width:30%;
+  width: 33%;
+  padding: 3px;
+  border-radius:16px;
   box-sizing: border-box;
 }
 /* 底部 */
@@ -277,11 +334,13 @@ export default {
 .hfoot>.hfImg{
   width: 20%;
   height: 20px;
+  font-size: 16px;
   position: absolute;
   right:15px;
 }
 .hfoot>.hfImg>img{
 /* 改变图片底层开始位置 默认基线 */
   vertical-align: bottom;
+  width: 19px;
 }
 </style>
