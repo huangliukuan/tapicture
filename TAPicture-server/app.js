@@ -3,11 +3,28 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const session=require("express-session");
+const cors=require("cors")
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+app.use(cors({
+  origin:["http://127.0.0.1:8080","http://localhost:8080"],
+  credentials:true
+}))
+
+// 5.配置session模块
+app.use(session({
+  // 安全字符串
+  secret:"128位字符串",
+  //请求时更新数据
+  resave:true,
+  // 保存初始数据
+  saveUninitialized:true
+}));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
