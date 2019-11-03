@@ -1,70 +1,82 @@
 <template>
 <div class="mine">
-  <!-- 头部 -->
-  <div class="mhead">
-    <!-- 三横线 -->
-    <div class="hleft">
-      <router-link class="lImg" to="javascript:;">
-        <img src="../assets/image/three.png" alt="设置">
-      </router-link>
-    </div>  
-    <!-- 昵称和碗号 -->
-    <div class="hcenter">
-      <router-link :to="{path:url}" class="mhname">{{muser.uname}}</router-link>
-      <p class="mhid">
-        <span>碗号:请登录</span>
-        <span>{{muser.uid}}</span>
-      </p>
-    </div>
-    <!-- 分享 -->
-    <div class="hright">
-      <router-link to="javascript:;">
-        <img src="../assets/image/share.png" alt="分享">
-      </router-link>
-    </div>
-  </div> 
-  <!-- 用户信息 -->
-  <div class="muser">
-    <!-- 头像 -->
-    <div class="uleft">
-      <div class="uImg">
+  <div class="ulog" v-if="uLog">
+    <div class="uImg">
         <img src="../assets/image/dingding.png" alt="头像">
-       <!-- <img :src="ip+muser.avater" alt="用户头像">  -->
-      </div>
     </div>
-    <!-- 详细信息-->
-    <div class="infor">
-      <!-- 关注点赞 -->
-      <div class="unum">
-        <div class="nleft">
-          <p>{{muser.att}}</p>
-          <p>关注</p>
-        </div>
-        <div class="ncenter">
-          <p>{{muser.fan}}</p>
-          <p>粉丝</p>
+    <router-link class="logreg" to="/login">登录</router-link>
+    <router-link class="logreg" to="/">注册</router-link>
+  </div>
+  <div v-else>
+    <!-- 头部 -->
+    <div class="mhead">
+      <!-- 三横线 -->
+      <div class="hleft">
+        <router-link class="lImg" to="javascript:;">
+          <img src="../assets/image/three.png" alt="设置">
+        </router-link>
+      </div>  
+      <!-- 昵称和碗号 -->
+      <div class="hcenter">
+        <p class="mhname">{{muser.uname}}</p>
+        <p class="mhid">
+          <span>碗号:</span>
+          <span>{{muser.uid}}</span>
+        </p>
+      </div>
+      <!-- 分享 -->
+      <div class="hright">
+        <router-link to="javascript:;">
+          <img src="../assets/image/share.png" alt="分享">
+        </router-link>
+      </div>
+    </div> 
+    <!-- 用户信息 -->
+    <div class="muser">
+      <!-- 头像 -->
+      <div class="uleft">
+        <div class="uImg">
+          <img :src="ip+muser.avater" alt="用户头像"> 
         </div>
       </div>
-      <!-- 资料编辑 -->
-      <div class="ueidt">
-        <router-link class="edit"
-        to="javascript:;">
-          编辑资料
-        </router-link>
+      <!-- 详细信息-->
+      <div class="infor">
+        <!-- 关注点赞 -->
+        <div class="unum">
+          <div class="nleft">
+            <p>{{muser.att}}</p>
+            <p>关注</p>
+          </div>
+          <div class="ncenter">
+            <p>{{muser.fan}}</p>
+            <p>粉丝</p>
+          </div>
+        </div>
+        <!-- 资料编辑 -->
+        <div class="ueidt">
+          <router-link class="edit"
+          to="/">
+            编辑资料
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
+  
+  <div v-if="uLog">
+
+  </div>
   <!-- 自拍内容 -->
-  <div class="heppy">
+  <div v-else class="heppy">
     <div class="htext">
       <!-- 用户信息 -->
       <div class="htitle">
         <div class="htImg">
-          <img src="../assets/image/dingding.png" alt="头像">
+          <img :src="ip+muser.avater" alt="头像">
         </div>
         <div class="htNT">
           <div class="htName">
-            <p>乐观开朗积极向上</p>
+            <p>{{muser.uname}}</p>
           </div>
           <div class="htTime">
             <span>10:55</span>
@@ -99,45 +111,66 @@ export default {
       ip:"http://127.0.0.1:3000/",
       muser:"",
       ulist:[],
-      abc:"",
-      url:""
+      uLog:true
+    }
+  },
+  methods:{
+    userReq(){
+      this.axios.get("mUser")
+      .then(res=>{
+        console.log(res);
+        if(res.data.code==1){
+          this.muser=res.data.data[0];
+          this.uLog=false;
+        }
+        
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    },
+    hepReq(){
+      this.axios.get("mMsg")
+      .then(res=>{
+        console.log(res);
+        if(res.data.code==1){
+          console.log(res.data)
+          this.ulist=res.data.data;
+        }  
+      })
+      .catch(err=>{
+        console.log(err);
+      })
     }
   },
   created(){
-    this.axios.get("mUser")
-    .then(res=>{
-      this.muser=res.data.data[0];
-      console.log(this.muser);
-      
-      var a = res.data.code;
-      var mhid = document.querySelector(".mhid");
-      var hright = document.querySelector(".hright");
-      var muser = document.querySelector(".muser");
-      var heppy = document.querySelector(".heppy");
-      if(a==-1){
-        this.abc = "请登录";
-        this.url = "login";
-        mhid.style.display = "none";
-        hright.style.display = "none";
-        muser.style.display = "none";
-        heppy.style.display = "none";
-      }else{
-        this.abc = res.data.uname;
-        this.url = "";
-        mhid.style.display = "block";
-        hright.style.display = "block";
-        muser.style.display = "flex";
-        heppy.style.display = "block";
-        
-      }
-    })
-    .catch(err=>{
-      console.log(err);
-    })
+    this.userReq();
+    this.hepReq();
   }
 }
 </script>
 <style scoped>
+/* 未登录状态 */
+.ulog{
+  width:100%;
+  height:128px;
+  line-height: 128px;
+  font-size: 20px;
+  margin-top:36px;
+  text-align: center;
+}
+.ulog>.uImg{
+  width:68px;
+  height: 68px;
+  margin: 0 auto;
+}
+.ulog .logreg{
+  color:#333;
+  border:1px solid #999;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
 .mhname{
   color:#000;
 }
@@ -213,8 +246,9 @@ export default {
   width: 60px;
   height: 60px;
   margin:20px auto;
+
 }
-.muser>.uleft>.uImg>img{
+.uImg>img{
   width: 100%;
   border:1px solid #aaa;
   border-radius: 50%;
