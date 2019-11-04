@@ -42,22 +42,22 @@ router.get("/mMsg",(req,res)=>{
       var sql2="select pid,ppic,puid  from wan_food inner join wan_pic on  fuid=? and puid=fpic";
        pool.query(sql2,[$uid],(err,result2)=>{
         if(err) throw err;
-        console.log(result,result2);
-        var i=0;
-        var j=0;
-        var pics=[[]];
-        var p=result2[0].puid;
-        for(var k=0;k<result2.length;k++){
-          if(result2[k].puid!=p){
-            p=result2[k].puid;
+        for(var i=0,j=0;i<result.length&&j<result2.length;){
+          if(result[i].fpic>result2[j].puid){
             i++;
-            j=0;
-            pics[i]=[];
+          }else if(result[i].fpic>result2[j].puid){
+            j++;
+          }else{
+            if(result[i].hasOwnProperty("fimg")){
+            result[i].fimg=[].concat(result2[j].ppic,result[i].fimg);
+              j++;
+            }else{
+              result[i].fimg=result2[j].ppic;
+              j++;
+            }
           }
-          pics[i][j]+=result2[k].ppic;
-          j++;
         }
-        res.send({code:1,data:{result,pics}});
+        res.send({code:1,data:result})
       })  
     }
   })
@@ -70,22 +70,22 @@ router.get('/index',(req,res)=>{
     var sql2=" select pid,ppic,puid from wan_food inner join wan_pic on puid=fpic order by puid desc";
     pool.query(sql2,(err,result2)=>{
      if(err) throw err;
-      for(var i=0,j=0;i<result.length&&j<result2.length;){
-        if(result[i].fpic>result2[j].puid){
-          i++;
-        }else if(result[i].fpic>result2[j].puid){
+    for(var i=0,j=0;i<result.length&&j<result2.length;){
+      if(result[i].fpic>result2[j].puid){
+        i++;
+      }else if(result[i].fpic>result2[j].puid){
+        j++;
+      }else{
+        if(result[i].hasOwnProperty("fimg")){
+        result[i].fimg=[].concat(result2[j].ppic,result[i].fimg);
           j++;
         }else{
-          if(result[i].hasOwnProperty("fimg")){
-          result[i].fimg=[].concat(result2[j].ppic,result[i].fimg);
-            j++;
-          }else{
-            result[i].fimg=result2[j].ppic;
-            j++;
-          }
+          result[i].fimg=result2[j].ppic;
+          j++;
         }
       }
-      res.send({code:1,data:result})
+    }
+    res.send({code:1,data:result})
     })  
   })
 })
