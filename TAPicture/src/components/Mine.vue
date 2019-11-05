@@ -12,8 +12,8 @@
     <div class="mhead">
       <!-- 三横线 -->
       <div class="hleft">
-        <router-link class="lImg" to="javascript:;">
-          <img src="../assets/image/three.png" alt="设置">
+        <router-link class="lImg"  to="">
+          <img src="../assets/image/three.png" @click="wkf()" alt="设置">
         </router-link>
       </div>  
       <!-- 昵称和碗号 -->
@@ -26,9 +26,16 @@
       </div>
       <!-- 分享 -->
       <div class="hright">
-        <router-link to="javascript:;">
-          <img src="../assets/image/share.png" alt="分享">
-        </router-link>
+        <van-cell  >
+          <img @click="share()" src="../assets/image/share.png" alt="分享">
+        </van-cell> 
+        <van-popup
+        v-model="show"
+        closeable
+
+        position="bottom"
+        :style="{ height: '20%' }"
+        /> 
       </div>
     </div> 
     <!-- 用户信息 -->
@@ -67,7 +74,7 @@
 
   </div>
   <!-- 自拍内容 -->
-  <div v-else class="heppy">
+  <div v-else class="heppy" v-for="(item,i) of ulist" :key="i"> 
     <div class="htext">
       <!-- 用户信息 -->
       <div class="htitle">
@@ -79,17 +86,19 @@
             <p>{{muser.uname}}</p>
           </div>
           <div class="htTime">
-            <span>10:55</span>
+            <span>{{(new Date(item.ftime)).getHours()}}</span>
+            <span>:</span>
+            <span>{{(new Date(item.ftime)).getMinutes()}}</span>
           </div>
         </div>
       </div>
       <!-- 美食图片 -->
       <div class="hbody">
         <div>
-          <p>今天美美哒!!!好开心在这个店里每餐一段啊啊啊啊啊啊啊啊啊啊啊</p>
+          <p>{{item.fintrd}}</p>
         </div>
         <div class="hbImg">
-            <img v-for="(item,i) in 6" :key="i" src="../assets/image/1.jpg" alt="美食图片">
+            <img v-for="(image,j) in item.fimg" :key="j" :src="ip+image" alt="美食图片">
         </div>
         
       </div>
@@ -97,7 +106,7 @@
       <div class="hfoot">
         <div class="hfImg">
           <img src="../assets/image/heart.png" alt="点赞">
-          <span>187</span>
+          <span>{{item.lnum}}</span>
         </div>
       </div>
     </div>
@@ -111,14 +120,21 @@ export default {
       ip:"http://127.0.0.1:3000/",
       muser:"",
       ulist:[],
-      uLog:true
+      uLog:true,
+      show:false
     }
   },
   methods:{
+    share(){
+      this.show=true;
+    },
+    wkf(){
+      this.$toast({message:"此功能未开启"})
+    },
     userReq(){
       this.axios.get("mUser")
       .then(res=>{
-        console.log(res);
+
         if(res.data.code==1){
           this.muser=res.data.data[0];
           this.uLog=false;
@@ -132,10 +148,11 @@ export default {
     hepReq(){
       this.axios.get("mMsg")
       .then(res=>{
-        console.log(res);
+
         if(res.data.code==1){
-          console.log(res.data)
+
           this.ulist=res.data.data;
+          console.log(this.ulist)
         }  
       })
       .catch(err=>{
@@ -153,7 +170,7 @@ export default {
 /* 未登录状态 */
 .ulog{
   width:100%;
-  height:128px;
+  height:30%;
   line-height: 128px;
   font-size: 20px;
   margin-top:36px;
@@ -177,6 +194,7 @@ export default {
 .mine{
   padding: 5px;
   box-sizing: border-box;
+  margin-bottom: 15%;
 }
 /* 头部外层 */
 .mhead{
@@ -196,6 +214,9 @@ export default {
   top: 10px;
   right: 17px;
 }
+.mhead>.hright>.van-cell{
+  padding: 0;
+}
 .mhead>.hleft{
   position: absolute;
   width:36px;
@@ -214,11 +235,10 @@ export default {
 }
 /* 头部昵称 */
 .mhead>.hcenter{
-  font-size:20PX;
+  font-size:20px;
  text-align: center;
 }
 .mhead>.hcenter>p{
- 
   margin:0 0 5px;
   font-size:16px;
   font-weight: bold;
@@ -239,8 +259,9 @@ export default {
 }
 /* 用户头像 */
 .muser>.uleft{
-  width:100px;
-  height:100px;
+  width:20%;
+  height:20%;
+  text-align: center;
 }
 .muser>.uleft>.uImg{
   width: 60px;
@@ -315,10 +336,13 @@ export default {
   width:15%;
   height: 48px;
   box-sizing: border-box;
+  text-align: center;
 }
 .htext>.htitle>.htNT{
   width: 85%;
   height: 48px;
+  padding-left:10px;
+  box-sizing: border-box;
 }
 /* 头像 */
 .htext>.htitle>.htImg>img{

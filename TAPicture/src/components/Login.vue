@@ -101,7 +101,7 @@ h2{
   text-indent:30px;
   line-height: 80px;
   font-weight:bolder;
-  background-image:-webkit-linear-gradient(top,rgb(255, 255, 255),#e98585,rgb(214, 55, 55)); 
+  background-image:-webkit-linear-gradient(top,rgb(255, 255, 255),#dac9c9,rgb(214, 155, 155)); 
   -webkit-background-clip:text; 
   -webkit-text-fill-color:transparent; 
 }

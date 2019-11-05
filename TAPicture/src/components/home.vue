@@ -1,11 +1,5 @@
 <template>
 <div class="home">
-    <!-- <div class="search">
-        <routerlink to="javascript:;">
-            <img class="searchimg" src="../assets/image/search.png" alt="">
-        </routerlink>
-        <input class="searchinput"  type="text" placeholder=搜索美食、菜谱和用户>
-    </div> -->
 <van-search placeholder="美食、菜谱和用户" show-action shape="round" >
     <div slot="action" class="aaa">搜索</div>
 </van-search>
@@ -52,7 +46,6 @@ export default {
     },
     methods:{
         gotoDetail(param){
-            console.log(param)
             this.$router.push({
                 path: `/Details/${param}`,
             })
@@ -70,7 +63,6 @@ export default {
                     this.rilist=[].concat(this.rilist,list);
                 }
             }
-            console.log(this.lelist,this.rilist)
         })
         .catch(err=>{
             console.log(err);
@@ -79,32 +71,6 @@ export default {
 }
 </script>
 <style scoped>
-    /* .search{
-        width:300px;
-        height: 25px;
-        border: 1px solid;
-        border-radius: 15px;
-        text-align: center;
-        position: relative;
-        margin-top: 5px;
-        font-size: 24px;~~
-    }
-    .searchimg{
-        height: 35px;
-        margin-top: 6px;
-        margin-left: -300px;
-    }
-    .searchinput{
-        height:20px;
-        width:280px;
-        margin-top: -5px;
-        position: absolute;
-        top: 7px;
-        left:35px;
-        outline: none;
-        background: none;
-        border: none; 
-    } */
     .homebody{
         width: 100%;
         display: flex;
