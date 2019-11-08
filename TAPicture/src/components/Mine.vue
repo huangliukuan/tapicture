@@ -35,7 +35,9 @@
 
         position="bottom"
         :style="{ height: '20%' }"
-        /> 
+        >
+          
+        </van-popup>
       </div>
     </div> 
     <!-- 用户信息 -->
@@ -148,11 +150,11 @@ export default {
     hepReq(){
       this.axios.get("mMsg")
       .then(res=>{
-
+        console.log(res)
         if(res.data.code==1){
-
-          this.ulist=res.data.data;
           console.log(this.ulist)
+          this.ulist=res.data.data;
+          
         }  
       })
       .catch(err=>{

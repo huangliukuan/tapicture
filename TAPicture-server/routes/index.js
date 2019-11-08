@@ -43,7 +43,7 @@ router.get("/mMsg",(req,res)=>{
        pool.query(sql2,[$uid],(err,result2)=>{
         if(err) throw err;
         for(var i=0,j=0;i<result.length&&j<result2.length;){
-          if(result[i].fpic>result2[j].puid){
+          if(result[i].fpic<result2[j].puid){
             i++;
           }else if(result[i].fpic>result2[j].puid){
             j++;
@@ -64,26 +64,19 @@ router.get("/mMsg",(req,res)=>{
 })
 // 
 router.get('/index',(req,res)=>{
-  var sql="select uid,uname,fintrd,ftime,lnum,fpic,avater,fname from wan_food inner join wan_user on fuid=uid order by ftime desc";
+  var sql="select uid,uname,fintrd,ftime,lnum,fpic,avater,fname from wan_food inner join wan_user on fuid=uid";
   pool.query(sql,(err,result)=>{
     if(err) throw err;
-    var sql2=" select pid,ppic,puid from wan_food inner join wan_pic on puid=fpic order by puid desc";
+    var sql2=" select pid,ppic,puid from wan_food inner join wan_pic on puid=fpic";
     pool.query(sql2,(err,result2)=>{
      if(err) throw err;
-    for(var i=0,j=0;i<result.length&&j<result2.length;){
-      if(result[i].fpic>result2[j].puid){
-        i++;
-      }else if(result[i].fpic>result2[j].puid){
-        j++;
-      }else{
+    for(var j=0;j<result2.length;j++){
+        var i=result2[j].puid-1;
         if(result[i].hasOwnProperty("fimg")){
         result[i].fimg=[].concat(result2[j].ppic,result[i].fimg);
-          j++;
         }else{
-          result[i].fimg=result2[j].ppic;
-          j++;
+          result[i].fimg=result2[j].ppic;   
         }
-      }
     }
     res.send({code:1,data:result})
     })  

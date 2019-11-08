@@ -6,7 +6,7 @@ Vue.use(Vuex);
 var store = new Vuex.Store({
   state:{//共享数据
     lelist:[],
-    rilist:[],
+    rilist:[],                              
     fidData:-1,
   },
   mutations:{ //修改共享数据
