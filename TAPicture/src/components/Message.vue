@@ -110,6 +110,9 @@ export default {
   height:72px;
   display: flex;
   justify-content: space-between;
+  border:1px solid #999;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 /* 头像 */
 .mBottom>.mbImg{

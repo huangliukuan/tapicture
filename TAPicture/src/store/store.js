@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from "axios"
 Vue.use(Vuex);
-
 var store = new Vuex.Store({
   state:{//共享数据
     lelist:[],
@@ -19,9 +18,7 @@ var store = new Vuex.Store({
   getters:{//获取共享数据
   },
   actions:{
-    
     getdata(context,n){
-      console.log(n)
       axios.get("/index")
       .then(res=>{
           var leftArr = []
@@ -33,14 +30,10 @@ var store = new Vuex.Store({
               }else{
                   rightArr.push(res.data.data[i])
               }
-              console.log(res.data.data[i].fpic)
               if(n==res.data.data[i].fpic){
                 fidData=res.data.data[i]
-                console.log(fidData)
               }
           }
-          console.log('left:',leftArr,'; right:', rightArr)
-  
           context.commit('updateLelist', {leftArr,rightArr,fidData})
       })
       .catch(err=>{

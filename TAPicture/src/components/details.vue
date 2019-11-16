@@ -42,7 +42,6 @@ export default {
 	created(){
 		//获取父页面传参
 		const id = this.$route.params.testId
-		console.log('testId:',id)
 		this.$store.dispatch('getdata',id);//将该参数放入此方法,从服务端请求该参数对应的对象的数据
 		//将获得的数据,动态绑定到此页面中
 	}

@@ -64,7 +64,7 @@ router.get("/mMsg",(req,res)=>{
 })
 // 
 router.get('/index',(req,res)=>{
-  var sql="select uid,uname,fintrd,ftime,lnum,fpic,avater,fname from wan_food inner join wan_user on fuid=uid";
+  var sql="select fid,uid,uname,fintrd,ftime,lnum,fpic,avater,fname from wan_food inner join wan_user on fuid=uid";
   pool.query(sql,(err,result)=>{
     if(err) throw err;
     var sql2=" select pid,ppic,puid from wan_food inner join wan_pic on puid=fpic";
@@ -81,5 +81,19 @@ router.get('/index',(req,res)=>{
     res.send({code:1,data:result})
     })  
   })
+})
+// 点赞
+router.get('/like',(req,res)=>{
+  var $fid=req.query.fid;
+  var $lnum=req.query.lnum;
+  var sql = 'select fid,fname,lnum from wan_food where fid=?'
+  pool.query(sql,[$fid],(err,seresult)=>{
+    if(err) throw err;
+    var sql = 'update wan_food set lnum=? where fid=?';
+    pool.query(sql,[$lnum,$fid],(err,upresult)=>{
+      if(err) throw err;
+      res.send({code:1,msg:"点赞成功"});
+    })
+  }) 
 })
 module.exports = router;
